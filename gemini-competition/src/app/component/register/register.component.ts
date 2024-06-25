@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/shared/auth.service';
 
 @Component({
@@ -6,13 +6,15 @@ import { AuthService } from 'src/app/shared/auth.service';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
-export class RegisterComponent  {
+export class RegisterComponent implements OnInit {
 
   email : string = '';
   password : string = '';
 
   constructor(private auth : AuthService) { }
 
+  ngOnInit(): void {
+  }
 
   register() {
 
