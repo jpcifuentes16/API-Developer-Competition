@@ -1,1 +1,20 @@
-<p>home works!</p>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-10 col-lg-8">
+        <h2 class="text-center mb-4">Componente Home</h2>
+        <form>
+          <div class="form-group">
+            <label for="interviewCode">Ingrese código de entrevista</label>
+            <input type="text" class="form-control" id="interviewCode" [(ngModel)]="interviewCode" name="interviewCode" (input)="onInputChange()" required>
+            <small *ngIf="interviewCode.trim().length === 0" class="form-text text-muted">El código es requerido.</small>
+          </div>
+          <button type="button" class="btn btn-primary btn-block mt-3" [disabled]="!isButtonEnabled" (click)="ingresar()">Ingresar</button>
+        </form>
+        <div class="mt-4 d-flex justify-content-around">
+          <button type="button" class="btn btn-secondary btn-lg flex-fill mr-2" (click)="nuevaEntrevista()">Nueva entrevista</button>
+          <button type="button" class="btn btn-secondary btn-lg flex-fill ml-2" (click)="verResultados()">Ver resultados</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
