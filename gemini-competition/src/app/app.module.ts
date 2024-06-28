@@ -10,6 +10,7 @@ import { RegisterComponent } from './component/register/register.component';
 import { FormsModule } from '@angular/forms';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { HomeComponent } from './component/home/home.component';
+import { NewInterviewComponent } from './component/new-interview/new-interview.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { HomeComponent } from './component/home/home.component';
     LoginComponent,
     RegisterComponent,
     HomeComponent,
+    NewInterviewComponent,
   ],
   imports: [
     BrowserModule,
