@@ -12,17 +12,26 @@ export class DataService {
 
 
 
+  getTemplates() {
+    const mainNodeId = '1axImfxwtufRYaQwuL9O5jyMMeB3';
+    const mainNodeRef = this.afs.collection("/root").doc("templates");
+
+    // Consultar todos los documentos en la colección secundaria 'templates'
+    return mainNodeRef.collection(mainNodeId).snapshotChanges();
+  }
+
 
 
   createTemplate(name: string, configuration: string) {
     const mainNodeId = '1axImfxwtufRYaQwuL9O5jyMMeB3';
-    const newTemplate = { name: name, configuration: configuration };
+    const newTemplate = { name: name, configuration: configuration, id: "" };
 
     // Crear un ID para el nuevo documento de plantilla
     const id = this.afs.createId();
+    newTemplate.id = id;
 
     // Referencia al nodo principal
-    const mainNodeRef = this.afs.collection("root").doc("templates");
+    const mainNodeRef = this.afs.collection("/root").doc("templates");
 
     // Agregar el nuevo template en el nodo secundario 'templates'
     mainNodeRef.collection(mainNodeId).doc(id).set(newTemplate)

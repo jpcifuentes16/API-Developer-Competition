@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -8,6 +9,8 @@ import { Component } from '@angular/core';
 export class HomeComponent {
   interviewCode: string = '';
   isButtonEnabled: boolean = false;
+
+  constructor(private router : Router){}
 
   onInputChange() {
     this.isButtonEnabled = this.interviewCode.trim().length > 0;
@@ -19,8 +22,7 @@ export class HomeComponent {
   }
 
   nuevaEntrevista() {
-    // Lógica para nueva entrevista
-    console.log('Nueva entrevista');
+    this.router.navigate(['/new-interview']);
   }
 
   verResultados() {
