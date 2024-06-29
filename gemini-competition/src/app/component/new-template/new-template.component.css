@@ -1,0 +1,9 @@
+.container {
+    max-width: 600px;
+  }
+  
+  .card-header {
+    background-color: #007bff;
+    color: #fff;
+  }
+  

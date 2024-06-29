@@ -14,6 +14,7 @@ export class AuthService {
   login(email : string, password : string) {
     this.fireauth.signInWithEmailAndPassword(email,password).then( res => {
         localStorage.setItem('token','true');
+        localStorage.setItem('uid', res.user!.uid);
 
         if(res.user?.emailVerified == true) {
           this.router.navigate(['home']);
@@ -63,6 +64,7 @@ export class AuthService {
 
       this.router.navigate(['/home']);
       localStorage.setItem('token',JSON.stringify(res.user?.uid));
+      localStorage.setItem('uid', res.user!.uid);
 
     }, err => {
       alert(err.message);

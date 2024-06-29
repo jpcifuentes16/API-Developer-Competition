@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { HomeComponent } from './component/home/home.component';
 import { NewInterviewComponent } from './component/new-interview/new-interview.component';
+import { NewTemplateComponent } from './component/new-template/new-template.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { NewInterviewComponent } from './component/new-interview/new-interview.c
     RegisterComponent,
     HomeComponent,
     NewInterviewComponent,
+    NewTemplateComponent,
   ],
   imports: [
     BrowserModule,
