@@ -34,14 +34,7 @@ export class NewInterviewComponent {
 
     this.data.getTemplates().subscribe(res => {
 
-      this.templates = res.map((e: any) => {
-        const data = e.payload.doc.data();
-        data.id = e.payload.doc.id;
-        return data;
-      })
-
-      console.log(this.templates);
-      
+      this.templates = res;      
 
     }, err => {
       alert('Error while fetching student data');

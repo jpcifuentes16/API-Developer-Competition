@@ -13,6 +13,9 @@ import { HomeComponent } from './component/home/home.component';
 import { NewInterviewComponent } from './component/new-interview/new-interview.component';
 import { NewTemplateComponent } from './component/new-template/new-template.component';
 
+import { HttpClientModule } from '@angular/common/http'; // Importa HttpClientModule
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -25,6 +28,7 @@ import { NewTemplateComponent } from './component/new-template/new-template.comp
   imports: [
     BrowserModule,
     AppRoutingModule,
+    HttpClientModule,
     AngularFireModule.initializeApp(environment.firebase),
     FormsModule
   ],  

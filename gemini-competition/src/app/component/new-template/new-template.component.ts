@@ -18,10 +18,16 @@ export class NewTemplateComponent {
       console.log('Nombre de la Plantilla:', this.templateName);
       console.log('Configuración:', this.configuration);
       // Lógica para guardar la plantilla
-
-      this.data.createTemplate(this.templateName, this.configuration);
-      this.router.navigate(['/new-interview']);
-      
+  
+      this.data.createTemplate(this.templateName, this.configuration).subscribe(
+        response => {
+          console.log(response);
+          this.router.navigate(['/new-interview']);
+        },
+        error => {
+          console.error('Error:', error);
+        }
+      );
     }
   }
 }
