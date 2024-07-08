@@ -45,6 +45,27 @@ app.get('/api/templates', async (req, res) => {
 
 
 
+async function getTemplateByName(mainNodeId, templateId) {
+  // Referencia al nodo principal
+  const mainNodeRef = admin.firestore().collection('root').doc('templates');
+
+  // Obtener referencia a la subcolección
+  const templatesRef = mainNodeRef.collection(mainNodeId);
+
+  // Hacer una consulta para obtener el documento con el nombre especificado
+  const querySnapshot = await templatesRef.where('id', '==', templateId).get();
+
+  if (querySnapshot.empty) {
+    console.log('No matching documents.');
+    return null;
+  }
+
+  // Suponiendo que solo hay un documento con ese nombre
+  const doc = querySnapshot.docs[0];
+  return doc.data();
+}
+
+
 
 // Ruta para agregar una plantilla
 app.post('/api/templates', async (req, res) => {
@@ -74,6 +95,52 @@ app.post('/api/templates', async (req, res) => {
   } catch (error) {
     console.error('Error al agregar template: ', error);
     res.status(500).send({ "message": 'Error al agregar template' });
+  }
+});
+
+
+// Ruta para agregar una plantilla
+app.post('/api/interview', async (req, res) => {
+  try {
+    const { name, userId } = req.body;
+
+    // Verificar que los campos necesarios están presentes
+    if (!name || !configuration) {
+      return res.status(400).send('Name and configuration are required');
+    }
+
+    const mainNodeId = userId;
+    const newInterview = { 
+                            name: name, 
+                            questions: [
+                              {
+                                question:"Question1?",
+                                answer: "Answer1",
+                                points: "5"
+                              },
+                              {
+                                question:"Question2?",
+                                answer: "Answer2",
+                                points: "5"
+                              }
+                            ],
+                            id: "" };
+
+    // Crear un ID para el nuevo documento de plantilla
+    const id = admin.firestore().collection('root').doc().id;
+    newInterview.id = id;
+
+    // Referencia al nodo principal
+    const mainNodeRef = admin.firestore().collection('root').doc('interviews');
+
+    // Agregar el nuevo template en el nodo secundario 'interview'
+    await mainNodeRef.collection(mainNodeId).doc(id).set(newInterview);
+
+    // Enviar respuesta de éxito
+    res.status(201).send({ "message": "interview agregado con éxito" });
+  } catch (error) {
+    console.error('Error al agregar template: ', error);
+    res.status(500).send({ "message": 'Error al agregar interview' });
   }
 });
 
