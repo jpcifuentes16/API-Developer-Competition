@@ -1,6 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const admin = require('./firebaseConfig'); // Import the initialized admin
+
+const generateInterviewQuestions = require('./AIService');
+
 const cors = require('cors');
 
 
@@ -105,9 +108,13 @@ app.post('/api/interview', async (req, res) => {
     const { name, userId } = req.body;
 
     // Verificar que los campos necesarios están presentes
-    if (!name || !configuration) {
+    if (!name) {
       return res.status(400).send('Name and configuration are required');
     }
+
+
+    const questions = await generateInterviewQuestions("test");
+    console.log(questions);
 
     const mainNodeId = userId;
     const newInterview = { 
