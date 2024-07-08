@@ -48,7 +48,7 @@ app.get('/api/templates', async (req, res) => {
 
 
 
-async function getTemplateByName(mainNodeId, templateId) {
+async function getTemplateById(mainNodeId, templateId) {
   // Referencia al nodo principal
   const mainNodeRef = admin.firestore().collection('root').doc('templates');
 
@@ -105,32 +105,23 @@ app.post('/api/templates', async (req, res) => {
 // Ruta para agregar una plantilla
 app.post('/api/interview', async (req, res) => {
   try {
-    const { name, userId } = req.body;
+    const { name, userId, templateId } = req.body;
 
     // Verificar que los campos necesarios están presentes
     if (!name) {
       return res.status(400).send('Name and configuration are required');
     }
 
+    const template = await getTemplateById(userId, templateId);
 
-    const questions = await generateInterviewQuestions("test");
+
+    const questions = await generateInterviewQuestions(template.configuration);
     console.log(questions);
 
     const mainNodeId = userId;
     const newInterview = { 
                             name: name, 
-                            questions: [
-                              {
-                                question:"Question1?",
-                                answer: "Answer1",
-                                points: "5"
-                              },
-                              {
-                                question:"Question2?",
-                                answer: "Answer2",
-                                points: "5"
-                              }
-                            ],
+                            questions: questions,
                             id: "" };
 
     // Crear un ID para el nuevo documento de plantilla
