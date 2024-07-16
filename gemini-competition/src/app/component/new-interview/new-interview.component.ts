@@ -49,7 +49,13 @@ export class NewInterviewComponent {
   }
 
   generateLink(index: number) {
-    console.log(`Generating link for ${this.templates[index].id}`);
+    this.data.createInterview(this.templates[index].id, "Juanito Perez").subscribe( () => {
+      alert(`Generating link for ${this.templates[index].id}`);
+    }, err => {
+      alert(`Error generating link: ${err}`);
+    });
+
+
     // Lógica para generar el enlace aquí
   }
 }

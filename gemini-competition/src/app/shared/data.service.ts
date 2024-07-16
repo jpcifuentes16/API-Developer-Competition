@@ -28,6 +28,12 @@ export class DataService {
     return this.postTemplate(newTemplate, "http://localhost:3000/api/templates");
   }
 
+  createInterview(templateId: string, name: string){
+    const newInterview = { userId: localStorage.getItem("uid"), templateId: templateId, name: name };
+    return this.postTemplate(newInterview, "http://localhost:3000/api/interview");
+    
+  }
+
 
   postTemplate(data: any, apiUrl: string): Observable<any> {
     const headers = new HttpHeaders({
