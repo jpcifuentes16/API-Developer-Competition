@@ -4,23 +4,23 @@ require('dotenv').config();
 const genAI = new GoogleGenerativeAI(process.env.API_KEY);
 
 
-function formatQuestions(questionsGemini)
-{
-    const newFormat = { questions: [] };
+function formatQuestions(newInputFormat) {
+  const newFormat = { questions: [] };
 
-    Object.keys(questionsGemini).forEach(section => {
-    questionsGemini[section].forEach(question => {
-        newFormat.questions.push({
-        section: parseInt(section),
-        question: question,
-        answer: "NA",
-        points: "0"
-        });
-    });
-    });
+  Object.keys(newInputFormat).forEach(section => {
+      const evaluation = newInputFormat[section].evaluation;
+      newInputFormat[section].questions.forEach(question => {
+          newFormat.questions.push({
+              section: parseInt(section),
+              question: question,
+              answer: "NA",
+              points: "0",
+              evaluation: evaluation
+          });
+      });
+  });
 
-    return newFormat
-
+  return newFormat;
 }
 
 
