@@ -21,6 +21,15 @@ export class DataService {
     return this.http.get<any>(`http://localhost:3000/api/templates?userId=${localStorage.getItem("uid")}`);
   }
 
+  getInterviewData(interviewId: string) {
+
+    return this.http.get<any>(` http://localhost:3000/api/interview/${interviewId}`);
+  }
+
+  generateAudio(text: string) {
+    return this.http.post("http://localhost:3000/api/generate-audio", { text }, { responseType: 'blob' });
+  }
+
 
 
   createTemplate(name: string, configuration: string) {

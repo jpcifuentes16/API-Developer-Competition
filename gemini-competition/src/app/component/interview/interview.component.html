@@ -1,1 +1,11 @@
-<p>interview works!</p>
+<div *ngIf="interviewData">
+    <h2>Entrevista con {{ interviewData.name }}</h2>
+    <div *ngFor="let question of interviewData.questions.questions; let i = index" [hidden]="currentQuestionIndex !== i">
+      <p>{{ question.question }}</p>
+      <button (click)="generateVoice(question.question)">Escuchar Pregunta</button>
+      <button (click)="startRecording()">Grabar Respuesta</button>
+      <button (click)="stopRecording()" [disabled]="!isRecording">Detener Grabación</button>
+      <button (click)="nextQuestion()" [disabled]="!isRecordingStopped">Siguiente</button>
+    </div>
+  </div>
+  

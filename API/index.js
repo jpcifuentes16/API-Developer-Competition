@@ -1,14 +1,46 @@
 const express = require('express');
+const { ElevenLabsClient } = require("elevenlabs");
+const { createWriteStream, unlink } = require("fs");
+const path = require("path");
 const bodyParser = require('body-parser');
 const admin = require('./firebaseConfig'); // Import the initialized admin
 
 const generateInterviewQuestions = require('./AIService');
+require('dotenv').config();
 
 const cors = require('cors');
 
 
 // Crear aplicación Express
 const app = express();
+
+const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY ;
+
+const client = new ElevenLabsClient({
+  apiKey: ELEVENLABS_API_KEY,
+});
+
+const createAudioFileFromText = async (text) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const audio = await client.generate({
+        voice: "Rachel",
+        model_id: "eleven_turbo_v2",
+        text,
+      });
+      const fileName = `elevenlabs.mp3`;
+      const filePath = path.join(__dirname, fileName);
+      const fileStream = createWriteStream(filePath);
+
+      audio.pipe(fileStream);
+      fileStream.on("finish", () => resolve(filePath)); // Resolve with the file path
+      fileStream.on("error", reject);
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
 
 // Middleware para parsear JSON
 app.use(bodyParser.json());
@@ -67,6 +99,36 @@ async function getTemplateById(mainNodeId, templateId) {
   const doc = querySnapshot.docs[0];
   return doc.data();
 }
+
+
+
+
+app.post("/api/generate-audio", async (req, res) => {
+  const { text } = req.body;
+  if (!text) {
+    return res.status(400).send("Text is required");
+  }
+
+  try {
+    const filePath = await createAudioFileFromText(text);
+    res.sendFile(filePath, (err) => {
+      if (err) {
+        console.error(err);
+      } else {
+        // Delete the file after sending it
+        unlink(filePath, (unlinkErr) => {
+          if (unlinkErr) {
+            console.error(`Failed to delete file: ${unlinkErr}`);
+          }
+        });
+      }
+    });
+  } catch (error) {
+    res.status(500).send(`Error generating audio: ${error.message}`);
+  }
+});
+
+
 
 
 
