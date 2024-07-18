@@ -17,8 +17,7 @@ export class HomeComponent {
   }
 
   ingresar() {
-    // Lógica para ingresar con el código de entrevista
-    console.log('Ingresar con el código:', this.interviewCode);
+    this.router.navigate(['/interview', this.interviewCode]);
   }
 
   nuevaEntrevista() {

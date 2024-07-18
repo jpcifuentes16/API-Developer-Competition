@@ -13,7 +13,8 @@ import { HomeComponent } from './component/home/home.component';
 import { NewInterviewComponent } from './component/new-interview/new-interview.component';
 import { NewTemplateComponent } from './component/new-template/new-template.component';
 
-import { HttpClientModule } from '@angular/common/http'; // Importa HttpClientModule
+import { HttpClientModule } from '@angular/common/http';
+import { InterviewComponent } from './component/interview/interview.component'; // Importa HttpClientModule
 
 
 @NgModule({
@@ -24,6 +25,7 @@ import { HttpClientModule } from '@angular/common/http'; // Importa HttpClientMo
     HomeComponent,
     NewInterviewComponent,
     NewTemplateComponent,
+    InterviewComponent,
   ],
   imports: [
     BrowserModule,

@@ -81,7 +81,7 @@ app.post('/api/templates', async (req, res) => {
     }
 
     const mainNodeId = userId;
-    const newTemplate = { name: name, configuration: configuration, id: "" };
+    const newTemplate = { name: name, configuration: configuration, id: "", "interviews-generated": [] };
 
     // Crear un ID para el nuevo documento de plantilla
     const id = admin.firestore().collection('root').doc().id;
@@ -102,7 +102,38 @@ app.post('/api/templates', async (req, res) => {
 });
 
 
-// Ruta para agregar una plantilla
+// Agregar link de template, pero cuando se crea un link
+// TODO
+app.post('/api/templates/:templateId/add-interview', async (req, res) => {
+  try {
+    const { templateId } = req.params;
+    const { userId, newInterview } = req.body;
+
+    // Verificar que los campos necesarios están presentes
+    if (!userId || !newInterview) {
+      return res.status(400).send('UserId and newInterview are required');
+    }
+
+    // Referencia al nodo principal
+    const mainNodeRef = admin.firestore().collection('root').doc('templates');
+    const templateRef = mainNodeRef.collection(userId).doc(templateId);
+
+    // Agregar el nuevo elemento al array de 'interviews-generated'
+    await templateRef.update({
+      'interviews-generated': admin.firestore.FieldValue.arrayUnion(newInterview)
+    });
+
+    // Enviar respuesta de éxito
+    res.status(200).send({ "message": "Entrevista agregada con éxito" });
+  } catch (error) {
+    console.error('Error al agregar entrevista: ', error);
+    res.status(500).send({ "message": 'Error al agregar entrevista' });
+  }
+});
+
+
+
+
 app.post('/api/interview', async (req, res) => {
   try {
     const { name, userId, templateId } = req.body;
@@ -113,34 +144,95 @@ app.post('/api/interview', async (req, res) => {
     }
 
     const template = await getTemplateById(userId, templateId);
-
-
     const questions = await generateInterviewQuestions(template.configuration);
     console.log(questions);
 
-    const mainNodeId = userId;
     const newInterview = { 
-                            name: name, 
-                            questions: questions,
-                            id: "" };
+      name: name, 
+      questions: questions,
+      id: "" 
+    };
 
-    // Crear un ID para el nuevo documento de plantilla
-    const id = admin.firestore().collection('root').doc().id;
+    // Crear un ID para el nuevo documento de entrevista
+    const id = admin.firestore().collection('interviews').doc().id;
     newInterview.id = id;
 
-    // Referencia al nodo principal
-    const mainNodeRef = admin.firestore().collection('root').doc('interviews');
-
-    // Agregar el nuevo template en el nodo secundario 'interview'
-    await mainNodeRef.collection(mainNodeId).doc(id).set(newInterview);
+    // Agregar el nuevo template en la colección 'interviews'
+    await admin.firestore().collection('interviews').doc(id).set(newInterview);
 
     // Enviar respuesta de éxito
-    res.status(201).send({ "message": "interview agregado con éxito" });
+    res.status(201).send({ "message": "Interview agregado con éxito" });
   } catch (error) {
-    console.error('Error al agregar template: ', error);
+    console.error('Error al agregar interview: ', error);
     res.status(500).send({ "message": 'Error al agregar interview' });
   }
 });
+
+
+// Nueva ruta para obtener una entrevista por ID
+app.get('/api/interview/:id', async (req, res) => {
+  try {
+    const interviewId = req.params.id;
+    
+    // Obtener el documento de entrevista por ID
+    const interviewDoc = await admin.firestore().collection('interviews').doc(interviewId).get();
+
+    if (!interviewDoc.exists) {
+      return res.status(404).send({ "message": "Interview no encontrada" });
+    }
+
+    // Enviar la información de la entrevista como respuesta
+    res.status(200).send(interviewDoc.data());
+  } catch (error) {
+    console.error('Error al obtener interview: ', error);
+    res.status(500).send({ "message": 'Error al obtener interview' });
+  }
+});
+
+
+app.patch('/api/interview/:id/question/:questionIndex', async (req, res) => {
+  try {
+    const interviewId = req.params.id;
+    const questionIndex = req.params.questionIndex;
+    const { answer, points } = req.body;
+
+    // Verificar que los campos necesarios están presentes
+    if (answer === undefined || points === undefined) {
+      return res.status(400).send({ "message": "Answer y points son requeridos" });
+    }
+
+    // Obtener el documento de entrevista por ID
+    const interviewDoc = await admin.firestore().collection('interviews').doc(interviewId).get();
+
+    if (!interviewDoc.exists) {
+      return res.status(404).send({ "message": "Interview no encontrada" });
+    }
+
+    // Obtener los datos de la entrevista
+    const interviewData = interviewDoc.data();
+
+    // Verificar que el índice de la pregunta es válido
+    if (questionIndex < 0 || questionIndex >= interviewData.questions.questions.length) {
+      return res.status(400).send({ "message": "Índice de pregunta inválido" });
+    }
+
+    // Actualizar los campos answer y points de la pregunta
+    interviewData.questions.questions[questionIndex].answer = answer;
+    interviewData.questions.questions[questionIndex].points = points;
+
+    // Guardar los cambios en Firestore
+    await admin.firestore().collection('interviews').doc(interviewId).set(interviewData);
+
+    // Enviar respuesta de éxito
+    res.status(200).send({ "message": "Pregunta actualizada con éxito" });
+  } catch (error) {
+    console.error('Error al actualizar pregunta: ', error);
+    res.status(500).send({ "message": 'Error al actualizar pregunta' });
+  }
+});
+
+
+
 
 
 
