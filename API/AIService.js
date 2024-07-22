@@ -39,17 +39,17 @@ function formatQuestions(newInputFormat) {
 }
 
 
-async function analizeAudio(filePath, mimeType) {
+async function analizeAnswer(filePath, mimeType, question, evaluation) {
   const model = genAI.getGenerativeModel({
     model: "gemini-1.5-flash",
   });
 
   const generationConfig = {
-    temperature: 1,
+    temperature: 0,
     topP: 0.95,
     topK: 64,
     maxOutputTokens: 8192,
-    responseMimeType: "text/plain",
+    responseMimeType: "application/json",
   };
 
   try {
@@ -61,6 +61,7 @@ async function analizeAudio(filePath, mimeType) {
         {
           role: "user",
           parts: [
+            {text: `\nPregunta: ${question}\n\nCriterio de evaluación: ${evaluation}\n\n\n\n\nTranscribe el audio sin perder detalle y asigna un punteo (0-10) tomando en cuenta la pregunta, criterio de evaluación y respuesta.\n\nFormato de respuesta:\n{\n    \"answer\": \"transcription\",\n    \"points\": \"0-10\"\n}`},
             {
               fileData: {
                 mimeType: file.mimeType,
@@ -72,9 +73,10 @@ async function analizeAudio(filePath, mimeType) {
       ],
     });
 
-    const result = await chatSession.sendMessage("Transcribe el audio sin perder detalle.");
-    console.log(result.response.text());
-    return result.response.text();
+    var result = await chatSession.sendMessage("");
+    result = result.response.text();
+    console.log(result);
+    return JSON.parse(result);
   } catch (error) {
     console.error('Error in analizeAudio:', error);
     throw new Error(`GoogleGenerativeAI Error: ${error.message}`);
@@ -99,5 +101,5 @@ async function generateInterviewQuestions(prompt) {
 
 module.exports = {
   generateInterviewQuestions,
-  analizeAudio
+  analizeAnswer
 };
