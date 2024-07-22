@@ -55,9 +55,16 @@ export class InterviewComponent implements OnInit {
     this.mediaRecorder.stop();
     this.mediaRecorder.onstop = () => {
       const audioBlob = new Blob(this.audioChunks, { type: 'audio/wav' });
-      const audioUrl = URL.createObjectURL(audioBlob);
-      const audio = new Audio(audioUrl);
-      audio.play();
+
+      this.data.uploadAudio(audioBlob, this.interviewId, this.currentQuestionIndex).subscribe(
+        (response) => {
+          console.log('Audio subido con éxito', response);
+        },
+        (error) => {
+          console.error('Error al subir el audio', error);
+        }
+      );
+      
     };
   }
 

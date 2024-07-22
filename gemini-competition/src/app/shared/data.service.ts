@@ -31,6 +31,16 @@ export class DataService {
   }
 
 
+  uploadAudio(audioBlob: Blob, interviewId: string, indexQuestion: number){
+
+    const formData = new FormData();
+    formData.append('audio', audioBlob, 'audio.wav');
+    formData.append('interviewId', interviewId);
+    formData.append('questionIndex', indexQuestion.toString());
+    return this.http.post('http://localhost:3000/upload-audio', formData)
+
+  }
+
 
   createTemplate(name: string, configuration: string) {
     const newTemplate = { name: name, configuration: configuration, userId: localStorage.getItem("uid") };
