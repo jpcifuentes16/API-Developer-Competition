@@ -1,11 +1,13 @@
 const express = require('express');
+const multer = require('multer');
 const { ElevenLabsClient } = require("elevenlabs");
 const { createWriteStream, unlink } = require("fs");
 const path = require("path");
 const bodyParser = require('body-parser');
 const admin = require('./firebaseConfig'); // Import the initialized admin
 
-const generateInterviewQuestions = require('./AIService');
+const { generateInterviewQuestions, analizeAudio } = require('./AIService');
+
 require('dotenv').config();
 
 const cors = require('cors');
@@ -13,6 +15,8 @@ const cors = require('cors');
 
 // Crear aplicación Express
 const app = express();
+
+const upload = multer({ dest: 'uploads/' });
 
 const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY ;
 
@@ -46,6 +50,28 @@ const createAudioFileFromText = async (text) => {
 app.use(bodyParser.json());
 
 app.use(cors());
+
+
+app.post('/upload-audio', upload.single('audio'), async (req, res) => {
+  const filePath = path.resolve(req.file.path);
+  const mimeType = req.file.mimetype;
+
+  try {
+    const transcription = await analizeAudio(filePath, mimeType);
+    res.json({ transcription:  transcription});
+  } catch (error) {
+    console.error('Error processing audio file', error);
+    res.status(500).send('Error processing audio file');
+  }
+});
+
+
+
+
+
+
+
+
 
 // Ruta para obtener plantillas
 app.get('/api/templates', async (req, res) => {
