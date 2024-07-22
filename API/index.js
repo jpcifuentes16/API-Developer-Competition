@@ -6,7 +6,7 @@ const path = require("path");
 const bodyParser = require('body-parser');
 const admin = require('./firebaseConfig'); // Import the initialized admin
 
-const { generateInterviewQuestions, analizeAudio } = require('./AIService');
+const { generateInterviewQuestions, analizeAnswer } = require('./AIService');
 
 require('dotenv').config();
 
@@ -56,9 +56,18 @@ app.post('/upload-audio', upload.single('audio'), async (req, res) => {
   const filePath = path.resolve(req.file.path);
   const mimeType = req.file.mimetype;
 
+  const { interviewId, questionIndex } = req.body;
+
+
+  // Obtener el documento de entrevista por ID
+  const interviewDoc = await admin.firestore().collection('interviews').doc(interviewId).get()
+  const interviewData = interviewDoc.data();
+  const question = interviewData.questions.questions[questionIndex].question;
+  const evaluation = interviewData.questions.questions[questionIndex].evaluation;
+  
   try {
-    const transcription = await analizeAudio(filePath, mimeType);
-    res.json({ transcription:  transcription});
+    const transcription = await analizeAnswer(filePath, mimeType, question, evaluation);
+    res.json(transcription);
   } catch (error) {
     console.error('Error processing audio file', error);
     res.status(500).send('Error processing audio file');
