@@ -28,8 +28,8 @@ const createAudioFileFromText = async (text) => {
   return new Promise(async (resolve, reject) => {
     try {
       const audio = await client.generate({
-        voice: "Rachel",
-        model_id: "eleven_turbo_v2",
+        voice: "George",
+        model_id: "eleven_multilingual_v2",
         text,
       });
       const fileName = `elevenlabs.mp3`;
