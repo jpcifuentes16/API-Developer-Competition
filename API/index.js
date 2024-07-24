@@ -1,10 +1,10 @@
 const express = require('express');
 const multer = require('multer');
 const { ElevenLabsClient } = require("elevenlabs");
-const { createWriteStream, unlink } = require("fs");
+const { createWriteStream, unlink, writeFile } = require("fs");
 const path = require("path");
 const bodyParser = require('body-parser');
-const admin = require('./firebaseConfig'); // Import the initialized admin
+const admin = require('./firebaseConfig');
 
 const { generateInterviewQuestions, analizeAnswer } = require('./AIService');
 
@@ -24,21 +24,35 @@ const client = new ElevenLabsClient({
   apiKey: ELEVENLABS_API_KEY,
 });
 
+
+const streamToBuffer = async (stream) => {
+  const chunks = [];
+  for await (const chunk of stream) {
+    chunks.push(chunk);
+  }
+  return Buffer.concat(chunks);
+};
+
+
 const createAudioFileFromText = async (text) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const audio = await client.generate({
+      const audioStream = await client.generate({
         voice: "George",
         model_id: "eleven_multilingual_v2",
         text,
       });
+      const audioBuffer = await streamToBuffer(audioStream);
       const fileName = `elevenlabs.mp3`;
       const filePath = path.join(__dirname, fileName);
-      const fileStream = createWriteStream(filePath);
 
-      audio.pipe(fileStream);
-      fileStream.on("finish", () => resolve(filePath)); // Resolve with the file path
-      fileStream.on("error", reject);
+      writeFile(filePath, audioBuffer, (err) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(filePath);
+        }
+      });
     } catch (error) {
       reject(error);
     }
