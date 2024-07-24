@@ -81,6 +81,7 @@ app.post('/upload-audio', upload.single('audio'), async (req, res) => {
   
   try {
     const transcription = await analizeAnswer(filePath, mimeType, question, evaluation);
+    await updateAnswer(interviewId,questionIndex, transcription.answer, transcription.points);
     res.json(transcription);
   } catch (error) {
     console.error('Error processing audio file', error);
@@ -89,7 +90,23 @@ app.post('/upload-audio', upload.single('audio'), async (req, res) => {
 });
 
 
+async function updateAnswer(interviewId, questionIndex, answer, points){
+  
+    // Obtener el documento de entrevista por ID
+    const interviewDoc = await admin.firestore().collection('interviews').doc(interviewId).get();
 
+    // Obtener los datos de la entrevista
+    const interviewData = interviewDoc.data();
+
+    // Actualizar los campos answer y points de la pregunta
+    interviewData.questions.questions[questionIndex].answer = answer;
+    interviewData.questions.questions[questionIndex].points = points;
+
+    // Guardar los cambios en Firestore
+    await admin.firestore().collection('interviews').doc(interviewId).set(interviewData);
+
+
+}
 
 
 
@@ -300,47 +317,6 @@ app.get('/api/interview/:id', async (req, res) => {
   }
 });
 
-
-app.patch('/api/interview/:id/question/:questionIndex', async (req, res) => {
-  try {
-    const interviewId = req.params.id;
-    const questionIndex = req.params.questionIndex;
-    const { answer, points } = req.body;
-
-    // Verificar que los campos necesarios están presentes
-    if (answer === undefined || points === undefined) {
-      return res.status(400).send({ "message": "Answer y points son requeridos" });
-    }
-
-    // Obtener el documento de entrevista por ID
-    const interviewDoc = await admin.firestore().collection('interviews').doc(interviewId).get();
-
-    if (!interviewDoc.exists) {
-      return res.status(404).send({ "message": "Interview no encontrada" });
-    }
-
-    // Obtener los datos de la entrevista
-    const interviewData = interviewDoc.data();
-
-    // Verificar que el índice de la pregunta es válido
-    if (questionIndex < 0 || questionIndex >= interviewData.questions.questions.length) {
-      return res.status(400).send({ "message": "Índice de pregunta inválido" });
-    }
-
-    // Actualizar los campos answer y points de la pregunta
-    interviewData.questions.questions[questionIndex].answer = answer;
-    interviewData.questions.questions[questionIndex].points = points;
-
-    // Guardar los cambios en Firestore
-    await admin.firestore().collection('interviews').doc(interviewId).set(interviewData);
-
-    // Enviar respuesta de éxito
-    res.status(200).send({ "message": "Pregunta actualizada con éxito" });
-  } catch (error) {
-    console.error('Error al actualizar pregunta: ', error);
-    res.status(500).send({ "message": 'Error al actualizar pregunta' });
-  }
-});
 
 
 

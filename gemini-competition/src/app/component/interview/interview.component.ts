@@ -11,8 +11,6 @@ export class InterviewComponent implements OnInit {
   interviewId: string = "";
   interviewData: any;
   currentQuestionIndex: number = 0;
-  isRecording: boolean = false;
-  isRecordingStopped: boolean = false;
   mediaRecorder: any;
   audioChunks: any[] = [];
 
@@ -24,21 +22,25 @@ export class InterviewComponent implements OnInit {
       this.data.getInterviewData(this.interviewId).subscribe(data => {
         this.interviewData = data;
         console.log(this.interviewData);
+        this.playQuestionAndRecord();
       });
     });
   }
 
-  generateVoice(text: string) {
-    this.data.generateAudio(text).subscribe((audioBlob) => {
+  playQuestionAndRecord() {
+    
+    const questionText = this.interviewData.questions.questions[this.currentQuestionIndex].question;
+    this.data.generateAudio(questionText).subscribe((audioBlob) => {
       const audioUrl = URL.createObjectURL(audioBlob);
       const audio = new Audio(audioUrl);
       audio.play();
+      audio.onended = () => {
+        this.startRecording();
+      };
     });
   }
 
   startRecording() {
-    this.isRecording = true;
-    this.isRecordingStopped = false;
     this.audioChunks = [];
     navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
       this.mediaRecorder = new (window as any).MediaRecorder(stream);
@@ -46,32 +48,35 @@ export class InterviewComponent implements OnInit {
       this.mediaRecorder.ondataavailable = (event: any) => {
         this.audioChunks.push(event.data);
       };
+      this.mediaRecorder.onstop = () => {
+        const audioBlob = new Blob(this.audioChunks, { type: 'audio/wav' });
+        
+        this.data.uploadAudio(audioBlob, this.interviewId, this.currentQuestionIndex).subscribe(
+          (response) => {
+            console.log('Audio subido con éxito', response);
+            this.nextQuestion();
+          },
+          (error) => {
+            console.error('Error al subir el audio', error);
+          }
+        );
+      };
     });
   }
 
   stopRecording() {
-    this.isRecording = false;
-    this.isRecordingStopped = true;
     this.mediaRecorder.stop();
-    this.mediaRecorder.onstop = () => {
-      const audioBlob = new Blob(this.audioChunks, { type: 'audio/wav' });
-
-      this.data.uploadAudio(audioBlob, this.interviewId, this.currentQuestionIndex).subscribe(
-        (response) => {
-          console.log('Audio subido con éxito', response);
-        },
-        (error) => {
-          console.error('Error al subir el audio', error);
-        }
-      );
-      
-    };
   }
 
   nextQuestion() {
     if (this.currentQuestionIndex < this.interviewData.questions.questions.length - 1) {
       this.currentQuestionIndex++;
-      this.isRecordingStopped = false;
+      this.playQuestionAndRecord();
+    }
+    else
+    {
+      console.log("Se termino");
+      
     }
   }
 }
