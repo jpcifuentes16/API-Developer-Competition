@@ -288,6 +288,15 @@ app.post('/api/interview', async (req, res) => {
     // Agregar el nuevo template en la colección 'interviews'
     await admin.firestore().collection('interviews').doc(id).set(newInterview);
 
+    // Agregar el objeto a la lista de interviews-generated en el template
+    await admin.firestore().collection('root').doc('templates').collection(userId).doc(templateId).update({
+      'interviews-generated': admin.firestore.FieldValue.arrayUnion({
+        id: id,
+        name: name,
+        points: 0
+      })
+    });
+
     // Enviar respuesta de éxito
     res.status(201).send({ "message": "Interview agregado con éxito" });
   } catch (error) {
