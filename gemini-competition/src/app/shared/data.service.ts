@@ -23,7 +23,7 @@ export class DataService {
 
   getInterviewData(interviewId: string) {
 
-    return this.http.get<any>(` http://localhost:3000/api/interview/${interviewId}`);
+    return this.http.get<any>(`http://localhost:3000/api/interview/${interviewId}`);
   }
 
   generateAudio(text: string) {
@@ -38,6 +38,13 @@ export class DataService {
     formData.append('interviewId', interviewId);
     formData.append('questionIndex', indexQuestion.toString());
     return this.http.post('http://localhost:3000/upload-audio', formData)
+
+  }
+
+
+  completedInterview( userId: string, templateId: string, interviewId: string){
+    const data = { userId: userId, templateId: templateId};
+    return this.postTemplate(data, `http://localhost:3000/api/interview/${interviewId}/complete`);
 
   }
 

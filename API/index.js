@@ -329,6 +329,48 @@ app.get('/api/interview/:id', async (req, res) => {
 
 
 
+// Nueva ruta para indicar que una entrevista ha terminado
+app.post('/api/interview/:id/complete', async (req, res) => {
+  try {
+    const interviewId = req.params.id;
+
+    // Obtener el documento de entrevista por ID
+    const interviewDoc = await admin.firestore().collection('interviews').doc(interviewId).get();
+    if (!interviewDoc.exists) {
+      return res.status(404).send({ "message": "Interview no encontrada" });
+    }
+
+    const interviewData = interviewDoc.data();
+    
+    // Sumar los puntos de todas las preguntas
+    const totalPoints = interviewData.questions.questions.reduce((sum, question) => sum + (parseFloat(question.points) || 0), 0);
+
+    // Obtener el ID de la plantilla asociada a la entrevista
+    const templateId = req.body.templateId; // Suponiendo que el templateId se pasa en el body
+    const userId = req.body.userId; // Suponiendo que el userId se pasa en el body
+
+    // Actualizar el objeto interviews-generated en la plantilla
+    const templateRef = admin.firestore().collection('root').doc('templates').collection(userId).doc(templateId);
+    await templateRef.update({
+      'interviews-generated': admin.firestore.FieldValue.arrayUnion({
+        id: interviewId,
+        name: interviewData.name,
+        points: totalPoints
+      })
+    });
+
+
+    console.log( "Entrevista completada con éxito " + totalPoints);
+
+    // Enviar respuesta de éxito
+    res.status(200).send({ "message": "Entrevista completada con éxito", totalPoints });
+  } catch (error) {
+    console.error('Error al completar entrevista: ', error);
+    res.status(500).send({ "message": 'Error al completar entrevista' });
+  }
+});
+
+
 
 
 
