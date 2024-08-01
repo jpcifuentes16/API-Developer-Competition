@@ -1,45 +1,56 @@
 <div class="container mt-5">
-    <div class="card">
-      <div class="card-header">
-        <h3>Configuración de Plantilla</h3>
-      </div>
-      <div class="card-body">
-        <form (ngSubmit)="onSubmit()" #templateForm="ngForm">
+  <div class="card">
+    <div class="card-header bg-primary text-white">
+      <h4 class="mb-0">Interview Template Configuration</h4>
+    </div>
+    <div class="card-body">
+      <form #form="ngForm" (ngSubmit)="onSubmit(form)">
+        <div class="form-group">
+          <label for="templateName" class="font-weight-bold">Template Name</label>
+          <input type="text" class="form-control" id="templateName" [(ngModel)]="formData.templateName" name="templateName" placeholder="Enter the template name" required>
+          <div *ngIf="form.submitted && form.controls.templateName?.invalid" class="text-danger">
+            Template name is required.
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="interviewLanguage" class="font-weight-bold">Interview Language</label>
+          <select class="form-control" id="interviewLanguage" [(ngModel)]="formData.interviewLanguage" name="interviewLanguage" required>
+            <option value="Español">Spanish</option>
+            <option value="Ingles">English</option>
+          </select>
+          <div *ngIf="form.submitted && form.controls.interviewLanguage?.invalid" class="text-danger">
+            Interview language is required.
+          </div>
+        </div>
+        <div *ngFor="let section of formData.sections; let i = index" class="section mb-4">
+          <h5 class="mt-4">Section {{i + 1}}</h5>
           <div class="form-group">
-            <label for="templateName">Nombre de la Plantilla</label>
-            <input
-              type="text"
-              id="templateName"
-              class="form-control"
-              required
-              [(ngModel)]="templateName"
-              name="templateName"
-              #nameInput="ngModel"
-            />
-            <div *ngIf="nameInput.invalid && nameInput.touched" class="text-danger">
-              El nombre de la plantilla es requerido.
+            <label for="questionCount-{{i}}" class="font-weight-bold">Number of Questions</label>
+            <input type="number" class="form-control" id="questionCount-{{i}}" [(ngModel)]="section.questionCount" name="questionCount-{{i}}" min="1" required>
+            <div *ngIf="form.submitted && form.controls['questionCount-' + i]?.invalid" class="text-danger">
+              Number of questions is required and must be at least 1.
             </div>
           </div>
-          <div class="form-group mt-3">
-            <label for="configuration">Configuración</label>
-            <textarea
-              id="configuration"
-              class="form-control"
-              rows="4"
-              required
-              [(ngModel)]="configuration"
-              name="configuration"
-              #configInput="ngModel"
-            ></textarea>
-            <div *ngIf="configInput.invalid && configInput.touched" class="text-danger">
-              La configuración es requerida.
+          <div class="form-group">
+            <label for="objective-{{i}}" class="font-weight-bold">Objective</label>
+            <textarea class="form-control" id="objective-{{i}}" [(ngModel)]="section.objective" name="objective-{{i}}" rows="3" placeholder="Describe the section objective" required></textarea>
+            <div *ngIf="form.submitted && form.controls['objective-' + i]?.invalid" class="text-danger">
+              Objective is required.
             </div>
           </div>
-          <button type="submit" class="btn btn-primary mt-3" [disabled]="templateForm.invalid">
-            Guardar
-          </button>
-        </form>
-      </div>
+          <div class="form-group">
+            <label for="evaluationCriteria-{{i}}" class="font-weight-bold">Evaluation Criteria</label>
+            <textarea class="form-control" id="evaluationCriteria-{{i}}" [(ngModel)]="section.evaluationCriteria" name="evaluationCriteria-{{i}}" rows="3" placeholder="Describe the evaluation criteria" required></textarea>
+            <div *ngIf="form.submitted && form.controls['evaluationCriteria-' + i]?.invalid" class="text-danger">
+              Evaluation criteria is required.
+            </div>
+          </div>
+        </div>
+        <div class="d-flex justify-content-between">
+          <button type="button" class="btn btn-outline-primary" (click)="addSection()">Add Section</button>
+          <button type="submit" class="btn btn-success">Save</button>
+        </div>
+      </form>
     </div>
   </div>
-  
+</div>

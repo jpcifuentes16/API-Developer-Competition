@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DataService } from 'src/app/shared/data.service';
 
@@ -8,18 +9,33 @@ import { DataService } from 'src/app/shared/data.service';
   styleUrls: ['./new-template.component.css']
 })
 export class NewTemplateComponent {
-  templateName: string = '';
-  configuration: string = '';
+  formData = {
+    templateName: '',
+    interviewLanguage: 'Español',
+    sections: [
+      {
+        questionCount: 1,
+        objective: '',
+        evaluationCriteria: ''
+      }
+    ]
+  };
 
   constructor(private data: DataService, private router : Router) { }
 
-  onSubmit() {
-    if (this.templateName && this.configuration) {
-      console.log('Nombre de la Plantilla:', this.templateName);
-      console.log('Configuración:', this.configuration);
-      // Lógica para guardar la plantilla
-  
-      this.data.createTemplate(this.templateName, this.configuration).subscribe(
+  addSection() {
+    this.formData.sections.push({
+      questionCount: 1,
+      objective: '',
+      evaluationCriteria: ''
+    });
+  }
+
+
+
+  onSubmit(form: NgForm) {
+    if (form.valid) {
+      this.data.createTemplate(this.formData).subscribe(
         response => {
           console.log(response);
           this.router.navigate(['/new-interview']);
@@ -28,6 +44,7 @@ export class NewTemplateComponent {
           console.error('Error:', error);
         }
       );
+
     }
   }
 }

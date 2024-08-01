@@ -49,8 +49,8 @@ export class DataService {
   }
 
 
-  createTemplate(name: string, configuration: string) {
-    const newTemplate = { name: name, configuration: configuration, userId: localStorage.getItem("uid") };
+  createTemplate(data: any) {
+    const newTemplate = { data, userId: localStorage.getItem("uid") };
     return this.postTemplate(newTemplate, "http://localhost:3000/api/templates");
   }
 

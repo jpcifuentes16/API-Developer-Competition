@@ -195,21 +195,46 @@ app.post("/api/generate-audio", async (req, res) => {
 });
 
 
+function formatTemplateConfiguration(data) {
+  let formattedString = `Idioma de la entrevista: ${data.interviewLanguage}. \n`;
+  formattedString += 'dada la siguiente estructura de entrevista de reclutamiento, genera preguntas para cada sección: \n\n';
+  
+  data.sections.forEach((section, index) => {
+    formattedString += `Sección ${index + 1}: \n`;
+    formattedString += `Objetivo: ${section.objective}. Máximo ${section.questionCount} preguntas para esta sección. \n`;
+    formattedString += `Evaluación: ${section.evaluationCriteria}. \n`;
+  });
+
+  formattedString += `
+Responde en el siguiente formato:
+{
+"1": {
+"questions": ["Pregunta1", ...],
+"evaluation": "this section is evaluated as follows..."
+}
+...
+}
+  `
+
+  return formattedString;
+}
 
 
 
 // Ruta para agregar una plantilla
 app.post('/api/templates', async (req, res) => {
   try {
-    const { name, configuration, userId } = req.body;
+    const { data, userId } = req.body;
 
     // Verificar que los campos necesarios están presentes
-    if (!name || !configuration) {
-      return res.status(400).send('Name and configuration are required');
+    if (!userId || !data) {
+      return res.status(400).send('userId and data are required');
     }
 
+    const configuration = formatTemplateConfiguration(data);
+
     const mainNodeId = userId;
-    const newTemplate = { name: name, configuration: configuration, id: "", "interviews-generated": [] };
+    const newTemplate = { name: data.templateName, configuration: configuration, id: "", "interviews-generated": [] };
 
     // Crear un ID para el nuevo documento de plantilla
     const id = admin.firestore().collection('root').doc().id;

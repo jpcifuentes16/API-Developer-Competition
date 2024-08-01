@@ -86,16 +86,39 @@ async function analizeAnswer(filePath, mimeType, question, evaluation) {
 
 
 async function generateInterviewQuestions(prompt) {
+  const model = genAI.getGenerativeModel({
+    model: "gemini-1.5-flash",
+  });
+
+  const generationConfig = {
+    temperature: 0,
+    topP: 0.95,
+    topK: 64,
+    maxOutputTokens: 8192,
+    responseMimeType: "application/json",
+  };
+
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-    const result = await model.generateContent(prompt);
-    const response = result.response;
-    const text = response.text();
-    const questionsGemini = JSON.parse(text.toString().replace("```json","").replace("```",""));
-    return formatQuestions(questionsGemini);
+
+    const chatSession = model.startChat({
+      generationConfig,
+      history: [
+        {
+          role: "user",
+          parts: [
+            {text: prompt}
+          ],
+        }
+      ],
+    });
+
+    var result = await chatSession.sendMessage("");
+    result = result.response.text();
+    console.log(result);
+    return JSON.parse(result);
   } catch (error) {
-    console.error("Error generating interview questions:", error);
-    throw error;
+    console.error('Error in generate questions:', error);
+    throw new Error(`GoogleGenerativeAI Error: ${error.message}`);
   }
 }
 
