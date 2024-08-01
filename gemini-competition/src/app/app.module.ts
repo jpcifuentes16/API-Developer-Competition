@@ -13,8 +13,10 @@ import { HomeComponent } from './component/home/home.component';
 import { NewInterviewComponent } from './component/new-interview/new-interview.component';
 import { NewTemplateComponent } from './component/new-template/new-template.component';
 
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { InterviewComponent } from './component/interview/interview.component'; // Importa HttpClientModule
+import { LoaderInterceptor } from './loader.interceptor';
+import { LoaderComponent } from './loader/loader.component';
 
 
 @NgModule({
@@ -26,6 +28,7 @@ import { InterviewComponent } from './component/interview/interview.component'; 
     NewInterviewComponent,
     NewTemplateComponent,
     InterviewComponent,
+    LoaderComponent,
   ],
   imports: [
     BrowserModule,
@@ -34,7 +37,9 @@ import { InterviewComponent } from './component/interview/interview.component'; 
     AngularFireModule.initializeApp(environment.firebase),
     FormsModule
   ],  
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
