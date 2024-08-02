@@ -303,7 +303,9 @@ app.post('/api/interview', async (req, res) => {
     const newInterview = { 
       name: name, 
       questions: questions,
-      id: "" 
+      id: "",
+      templateId: templateId,
+      author: userId
     };
 
     // Crear un ID para el nuevo documento de entrevista
@@ -318,7 +320,7 @@ app.post('/api/interview', async (req, res) => {
       'interviews-generated': admin.firestore.FieldValue.arrayUnion({
         id: id,
         name: name,
-        points: 0
+        points: NaN
       })
     });
 
