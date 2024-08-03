@@ -21,6 +21,12 @@ export class DataService {
     return this.http.get<any>(`http://localhost:3000/api/templates?userId=${localStorage.getItem("uid")}`);
   }
 
+
+  getInterviewResult(templateId: string) {
+    const userId = localStorage.getItem("uid");
+    return this.http.get<any>(`http://localhost:3000/api/interview-results?userId=${userId}&templateId=${templateId}`);
+  }
+  
   getInterviewData(interviewId: string) {
 
     return this.http.get<any>(`http://localhost:3000/api/interview/${interviewId}`);

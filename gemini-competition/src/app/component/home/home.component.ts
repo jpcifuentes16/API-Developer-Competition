@@ -25,7 +25,6 @@ export class HomeComponent {
   }
 
   verResultados() {
-    // Lógica para ver resultados
-    console.log('Ver resultados');
+    this.router.navigate(['/template-results']);
   }
 }

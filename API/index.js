@@ -109,6 +109,46 @@ async function updateAnswer(interviewId, questionIndex, answer, points){
 }
 
 
+// Ruta para obtener la información de un template específico
+app.get('/api/interview-results', async (req, res) => {
+  try {
+    // Obtener el ID del nodo principal del query parameter
+    const mainNodeId = req.query.userId;
+
+    // Obtener el ID del template del query parameter
+    const templateId = req.query.templateId;
+    
+    // Validar que el mainNodeId y templateId estén presentes
+    if (!mainNodeId) {
+      return res.status(400).send('El parámetro mainNodeId es requerido');
+    }
+    
+    if (!templateId) {
+      return res.status(400).send('El parámetro templateId es requerido');
+    }
+
+    // Referencia al nodo principal
+    const mainNodeRef = admin.firestore().collection('root').doc('templates');
+
+    // Obtener referencia al documento específico en la subcolección
+    const templateRef = mainNodeRef.collection(mainNodeId).doc(templateId);
+
+    // Obtener el documento
+    const doc = await templateRef.get();    
+
+    // Validar si el documento existe
+    if (!doc.exists) {
+      return res.status(404).send('Template no encontrado');
+    }
+
+    // Enviar respuesta JSON con los datos del documento
+    res.json({ "interviews-generated":  doc.data()['interviews-generated'] });
+  } catch (error) {
+    console.error('Error al obtener el template:', error);
+    res.status(500).send('Error al obtener el template');
+  }
+});
+
 
 
 

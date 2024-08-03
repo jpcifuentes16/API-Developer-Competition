@@ -17,6 +17,8 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { InterviewComponent } from './component/interview/interview.component'; // Importa HttpClientModule
 import { LoaderInterceptor } from './loader.interceptor';
 import { LoaderComponent } from './loader/loader.component';
+import { TemplateResultsComponent } from './component/template-results/template-results.component';
+import { InterviewResultsComponent } from './component/interview-results/interview-results.component';
 
 
 @NgModule({
@@ -29,6 +31,8 @@ import { LoaderComponent } from './loader/loader.component';
     NewTemplateComponent,
     InterviewComponent,
     LoaderComponent,
+    TemplateResultsComponent,
+    InterviewResultsComponent,
   ],
   imports: [
     BrowserModule,

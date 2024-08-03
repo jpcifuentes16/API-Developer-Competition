@@ -1,0 +1,24 @@
+<div class="container mt-4">
+    <h2 class="mb-4">Resultados de la Entrevista para {{ name }}</h2>
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead class="thead-dark">
+          <tr>
+            <th>Nombre</th>
+            <th>Punteo</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let interview of interviews">
+            <td>{{ interview.name }}</td>
+            <td>{{ interview.points !== null ? interview.points : '-' }}</td>
+            <td>
+              <button class="btn btn-primary btn-sm" (click)="viewDetails(interview.id)">Ver Detalles</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
