@@ -115,7 +115,7 @@ async function generateInterviewQuestions(prompt) {
     var result = await chatSession.sendMessage("");
     result = result.response.text();
     console.log(result);
-    return JSON.parse(result);
+    return formatQuestions(JSON.parse(result));
   } catch (error) {
     console.error('Error in generate questions:', error);
     throw new Error(`GoogleGenerativeAI Error: ${error.message}`);
