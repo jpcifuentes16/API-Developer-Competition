@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { DataService } from 'src/app/shared/data.service';  // Ajuste la ruta según la estructura de su proyecto
+import { ActivatedRoute, Router } from '@angular/router';
+import { DataService } from 'src/app/shared/data.service';
 
 @Component({
   selector: 'app-interview-results',
@@ -14,6 +14,7 @@ export class InterviewResultsComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private dataService: DataService
   ) { }
 
@@ -32,7 +33,7 @@ export class InterviewResultsComponent implements OnInit {
   }
 
   viewDetails(interviewId: string): void {
-    console.log(interviewId);
+    this.router.navigate(['/interview-details', interviewId]);
     
   }
 

@@ -19,6 +19,7 @@ import { LoaderInterceptor } from './loader.interceptor';
 import { LoaderComponent } from './loader/loader.component';
 import { TemplateResultsComponent } from './component/template-results/template-results.component';
 import { InterviewResultsComponent } from './component/interview-results/interview-results.component';
+import { InterviewDetailsComponent } from './component/interview-details/interview-details.component';
 
 
 @NgModule({
@@ -33,6 +34,7 @@ import { InterviewResultsComponent } from './component/interview-results/intervi
     LoaderComponent,
     TemplateResultsComponent,
     InterviewResultsComponent,
+    InterviewDetailsComponent,
   ],
   imports: [
     BrowserModule,
