@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2, ElementRef } from '@angular/core';
 
 @Component({
   selector: 'app-temp-ui',
@@ -12,14 +12,15 @@ export class TempUIComponent implements OnInit {
   interval: any;
   id: string = "E0wSe7uENdvzX9P5uHrr";
   formattedId: string = "";
-  isUserTurn = false;
+  isUserTurn = true;
 
-  constructor() {
+  constructor(private renderer: Renderer2, private el: ElementRef) {
     this.formattedId = this.formatId(this.id);
   }
 
   ngOnInit(): void {
     this.startTimer();
+    this.activateWaveAnimation();
   }
 
   ngOnDestroy(): void {
@@ -68,5 +69,23 @@ export class TempUIComponent implements OnInit {
   pad(value: number): string {
     return value.toString().padStart(2, '0');
   }
+
+  setHeight() {
+    const firstElement = this.el.nativeElement.querySelector('.js-first');
+    const secondElement = this.el.nativeElement.querySelector('.js-second');
+    const thirdElement = this.el.nativeElement.querySelector('.js-third');
+  
+    this.renderer.setStyle(firstElement, 'height', '8px');
+    this.renderer.setStyle(secondElement, 'height', '16px');
+    this.renderer.setStyle(thirdElement, 'height', '8px');
+  }
+
+  activateWaveAnimation() {
+    setInterval(() => this.setHeight(), 200);
+  }
+  
+  
+
+  
 
 }

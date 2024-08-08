@@ -3,21 +3,45 @@
 <div class="main-container">
   <div class="video-container">
     <div class="video-box">
-      <div class="mic">
-        <span [class.fas]="true" [class.fa-microphone]="!isUserTurn" [class.fa-microphone-slash]="isUserTurn"></span>
+
+      <div class="mic" *ngIf="isUserTurn">
+        <span class="fas fa-microphone-slash"></span>
       </div>
+
+      <div class="parent" *ngIf="!isUserTurn">
+        <div class="child js-first"></div>
+        <div class="child js-second"></div>
+        <div class="child js-third"></div>    
+      </div>
+
+
+
       <div class="symbol bg-blue">N</div>
       <div class="name">Nate</div>
     </div>
+
+
+
+    
     <div class="video-box">
-      <div class="mic">
-        <span [class.fas]="true" [class.fa-microphone]="isUserTurn" [class.fa-microphone-slash]="!isUserTurn"></span>
+      <div class="mic" *ngIf="!isUserTurn">
+        <span class="fas fa-microphone-slash"></span>
       </div>
+
+      <div class="parent" *ngIf="isUserTurn">
+        <div class="child js-first"></div>
+        <div class="child js-second"></div>
+        <div class="child js-third"></div>    
+      </div>
+
+
       <div class="symbol bg-orange">{{getFirstLetterUpperCase()}}</div>
       <div class="name">{{nameCandidate}}</div>
     </div>
   </div>
   
+
+
 
   <div class="footer bg-dark-gray">
     <div class="meeting-name">{{ formattedId }} | {{formatTimer()}}</div>
