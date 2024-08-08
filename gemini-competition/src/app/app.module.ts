@@ -20,6 +20,10 @@ import { LoaderComponent } from './loader/loader.component';
 import { TemplateResultsComponent } from './component/template-results/template-results.component';
 import { InterviewResultsComponent } from './component/interview-results/interview-results.component';
 import { InterviewDetailsComponent } from './component/interview-details/interview-details.component';
+import { TempUIComponent } from './component/temp-ui/temp-ui.component';
+
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 
 @NgModule({
@@ -35,13 +39,16 @@ import { InterviewDetailsComponent } from './component/interview-details/intervi
     TemplateResultsComponent,
     InterviewResultsComponent,
     InterviewDetailsComponent,
+    TempUIComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     AngularFireModule.initializeApp(environment.firebase),
-    FormsModule
+    FormsModule,
+    MatIconModule,
+    MatButtonModule
   ],  
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true },
