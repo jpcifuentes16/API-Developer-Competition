@@ -120,7 +120,7 @@ body {
 
 
 .icon:hover {
-  background: #555;
+  filter: brightness(0.7);
 }
 
 .bg-gray {

@@ -3,22 +3,26 @@
 <div class="main-container">
   <div class="video-container">
     <div class="video-box">
-      <div class="mic"><span class="fas fa-microphone-slash"></span></div>
+      <div class="mic">
+        <span [class.fas]="true" [class.fa-microphone]="!isUserTurn" [class.fa-microphone-slash]="isUserTurn"></span>
+      </div>
       <div class="symbol bg-blue">N</div>
       <div class="name">Nate</div>
     </div>
     <div class="video-box">
-      <div class="mic"><span class="fas fa-microphone-slash"></span></div>
-      <div class="symbol bg-orange">J</div>
-      <div class="name">Jose Cifuentes</div>
+      <div class="mic">
+        <span [class.fas]="true" [class.fa-microphone]="isUserTurn" [class.fa-microphone-slash]="!isUserTurn"></span>
+      </div>
+      <div class="symbol bg-orange">{{getFirstLetterUpperCase()}}</div>
+      <div class="name">{{nameCandidate}}</div>
     </div>
   </div>
+  
 
   <div class="footer bg-dark-gray">
-    <div class="meeting-name">dce-oifh-mmx | 23:00</div>
+    <div class="meeting-name">{{ formattedId }} | {{formatTimer()}}</div>
 
     <div class="controls meeting-controls">
-      <div class="bg-gray icon"><i class="fas fa-microphone"></i></div>
       <div class="bg-green icon check" ><i class="fas fa-check"></i></div>
       <div class="bg-red icon phone"><i class="fa-solid fa-phone"></i></div>
     </div>
