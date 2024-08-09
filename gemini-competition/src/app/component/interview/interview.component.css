@@ -122,6 +122,10 @@ body {
   .check {
   
     background: green;
+    width: 100px; /* Aumentar tamaño */
+    height: 100px; /* Aumentar tamaño */
+    font-size: 50px; /* Aumentar tamaño del icono */
+    padding-top: 10%;
   }
   
   

@@ -10,6 +10,7 @@ import { TemplateResultsComponent } from './component/template-results/template-
 import { InterviewResultsComponent } from './component/interview-results/interview-results.component';
 import { InterviewDetailsComponent } from './component/interview-details/interview-details.component';
 import { TempUIComponent } from './component/temp-ui/temp-ui.component';
+import { FarewellComponent } from './component/farewell/farewell.component';
 
 const routes: Routes = [
   {path: '', redirectTo:'login', pathMatch:'full'},
@@ -23,6 +24,7 @@ const routes: Routes = [
   {path: 'interview/:id', component : InterviewComponent},
   {path: 'interview-details/:id', component : InterviewDetailsComponent},
   {path: 'tempui', component : TempUIComponent},
+  {path: 'farewell', component : FarewellComponent},
 ];
 
 @NgModule({

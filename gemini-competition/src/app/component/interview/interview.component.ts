@@ -2,6 +2,8 @@ import { Component, OnInit, Renderer2, ElementRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DataService } from 'src/app/shared/data.service';
 import { ChangeDetectorRef } from '@angular/core';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-interview',
@@ -26,7 +28,8 @@ export class InterviewComponent implements OnInit {
     private data: DataService, 
     private cdr: ChangeDetectorRef,
     private renderer: Renderer2,
-    private el: ElementRef
+    private el: ElementRef,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -103,7 +106,7 @@ export class InterviewComponent implements OnInit {
   }
 
   playInstructionsAudio() {
-    const instructionsAudio = new Audio('assets/audios/intro_EN.mp3'); // Ruta al archivo de audio de instrucciones
+    const instructionsAudio = new Audio('assets/audios/intro_EN.mp3');
     instructionsAudio.play();
 
     instructionsAudio.onended = () => {
@@ -218,10 +221,22 @@ export class InterviewComponent implements OnInit {
     }
   }
 
+
+
+  playFarewellAudio() {
+    const farewellAudio = new Audio('assets/audios/despedida_EN.mp3');
+    farewellAudio.play();
+  
+    farewellAudio.onended = () => {
+      this.router.navigate(['/farewell']);
+    };
+  }
+
   completeInterview() {
     this.data.completedInterview(this.interviewData.author, this.interviewData.templateId, this.interviewId).subscribe(
       (res) => {
         console.log('Entrevista completada con éxito', res);
+        this.playFarewellAudio(); 
       },
       (error) => {
         console.error('Error al completar la entrevista', error);
