@@ -4,3 +4,13 @@
     <button (click)="stopRecording()">Detener Grabación</button>
   </div>
 </div>
+
+
+<div *ngIf="isUserTurn; else systemTurn">
+  <p>Es tu turno para hablar. Por favor, responde la pregunta.</p>
+  <button (click)="stopRecording()">Detener grabación</button>
+</div>
+
+<ng-template #systemTurn>
+  <p>El sistema está hablando. Por favor, espera...</p>
+</ng-template>
