@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2, ElementRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DataService } from 'src/app/shared/data.service';
 import { ChangeDetectorRef } from '@angular/core'; // Importar ChangeDetectorRef
@@ -16,22 +16,94 @@ export class InterviewComponent implements OnInit {
   audioChunks: any[] = [];
   isUserTurn: boolean = false;
 
+  nameCandidate: string = "";
+  timer: number = 0;
+  interval: any;
+  formattedId: string = "";
+
   constructor(
     private route: ActivatedRoute, 
     private data: DataService, 
-    private cdr: ChangeDetectorRef // Inyectar ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private renderer: Renderer2,
+    private el: ElementRef
   ) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       this.interviewId = params.get('id')!;
+      this.formattedId = this.formatId(this.interviewId);
       this.loadInterviewData();
+      this.startTimer();
+      this.activateWaveAnimation();
     });
+  }
+
+  ngOnDestroy(): void {
+    this.clearTimer();
+  }
+
+  formatId(id: string): string {
+    if (id.length >= 13) {
+      return `${id.substring(0, 3)}-${id.substring(3, 7)}-${id.substring(7, 10)}`;
+    }
+    return id;
+  }
+
+  startTimer(): void {
+    this.interval = setInterval(() => {
+      this.timer++;
+    }, 1000); // Incrementa el cronómetro cada segundo
+  }
+
+  clearTimer(): void {
+    if (this.interval) {
+      clearInterval(this.interval);
+    }
+  }
+
+  getFirstLetterUpperCase(): string {
+    if (this.nameCandidate && this.nameCandidate.length > 0) {
+      return this.nameCandidate.charAt(0).toUpperCase();
+    }
+    return '';
+  }
+
+
+  formatTimer(): string {
+    const hours = Math.floor(this.timer / 3600);
+    const minutes = Math.floor((this.timer % 3600) / 60);
+    const seconds = this.timer % 60;
+
+    if (hours > 0) {
+      return `${this.pad(hours)}:${this.pad(minutes)}:${this.pad(seconds)}`;
+    } else {
+      return `${this.pad(minutes)}:${this.pad(seconds)}`;
+    }
+  }
+
+  pad(value: number): string {
+    return value.toString().padStart(2, '0');
+  }
+
+  setHeight() {
+    const firstElement = this.el.nativeElement.querySelector('.js-first');
+    const secondElement = this.el.nativeElement.querySelector('.js-second');
+    const thirdElement = this.el.nativeElement.querySelector('.js-third');
+  
+    this.renderer.setStyle(firstElement, 'height', '8px');
+    this.renderer.setStyle(secondElement, 'height', '16px');
+    this.renderer.setStyle(thirdElement, 'height', '8px');
+  }
+
+  activateWaveAnimation() {
+    setInterval(() => this.setHeight(), 200);
   }
 
   loadInterviewData() {
     this.data.getInterviewData(this.interviewId).subscribe(data => {
       this.interviewData = data;
+      this.nameCandidate = data.name;
       console.log(this.interviewData);
       this.playQuestionAndRecord();
     }, error => {

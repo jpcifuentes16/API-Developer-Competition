@@ -1,0 +1,191 @@
+body {
+    background: #202124;
+    color: #ccc;
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+  }
+
+  .disabled {
+    pointer-events: none; /* Evita que el div sea clickeable */
+    opacity: 0.5; /* Cambia la opacidad para dar feedback visual */
+  }
+  
+  
+  .main-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background: #202124;
+    justify-content: space-between;
+  }
+  
+  .video-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    padding-top: 7%;
+  }
+  
+  .video-box {
+    background: #3C4043;
+    border-radius: 10px;
+    width: 45%;
+    height: 60vh;
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin: 10px;
+  }
+  
+  .symbol {
+    font-size: 50px;
+    text-align: center;
+    color: white;
+    height: 100px;
+    width: 100px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .bg-blue {
+    background:  #2684FC;
+  }
+  
+  .bg-orange {
+    background: #ff9800;
+  }
+  
+  .name {
+    position: absolute;
+    bottom: 10px;
+    color: white;
+    left: 10px;
+    font-size: 18px;
+  }
+  
+  .mic {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    text-align: center;
+    border-radius: 50%;
+    height: 30px;
+    width: 30px;
+    background: #34373A;
+    color: white;
+    font-size: 16px;
+    padding: 4px;
+  }
+  
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 20px;
+    font-weight: bolder;
+    align-items: center;
+  }
+  
+  .controls {
+    display: flex;
+    justify-content: center;
+    
+  }
+  
+  .meeting-controls {
+    margin-left: -12%;
+  }
+  
+  .icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    padding: 5px;
+    margin: 0px 5px;
+    font-size: 20px;
+    text-align: center;
+    cursor: pointer;
+    color: white;
+    background: rgb(60,64,67);
+    transition: background 0.3s ease;
+  }
+  
+  .phone {
+    transform: rotate(135deg);
+  }
+  
+  .check {
+  
+    background: green;
+  }
+  
+  
+  .icon:hover {
+    filter: brightness(0.7);
+  }
+  
+  .bg-gray {
+    background: #3b4045;
+  }
+  
+  .bg-dark-gray {
+    background: #202124;
+  }
+  
+  .bg-red {
+    background: rgb(234,67,53);
+  }
+  
+  .meeting-name {
+    margin-left: 10px;
+    color: white;
+  }
+  
+  
+  @keyframes volumeLevelJiggle {
+    0% {
+        transform: scaleY(0.8)
+    }
+    50% {
+        transform: scaleY(1)
+    }
+    to {
+        transform: scaleY(0.8)
+    }
+  }
+  
+  .parent {
+    background-color: rgba(26,115,232);
+    color: #fff;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    text-align: center;
+    border-radius: 50%;
+    height: 30px;
+    width: 30px;
+    font-size: 16px;
+    padding: 4px;
+  }
+  
+  
+  
+  .child {
+  background-color: currentColor;
+  border-radius: 0.125em/0.125em;
+  height: 0.25em;
+  width: 0.25em;
+  will-change: height,transform;
+  z-index: 1;
+  animation: volumeLevelJiggle 600ms steps(9,jump-none) 0s infinite;
+  transition: height 200ms steps(6,jump-none);
+  margin: 0 1px;
+  }

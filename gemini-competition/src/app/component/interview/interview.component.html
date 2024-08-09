@@ -1,16 +1,63 @@
-<div *ngIf="interviewData">
-  <h2>Entrevista con {{ interviewData.name }}</h2>
-  <div *ngFor="let question of interviewData.questions.questions; let i = index" [hidden]="currentQuestionIndex !== i">
-    <button (click)="stopRecording()">Detener Grabación</button>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<div class="main-container">
+  <div class="video-container">
+    <div class="video-box">
+
+      <div class="mic" *ngIf="isUserTurn">
+        <span class="fas fa-microphone-slash"></span>
+      </div>
+
+      <div class="parent" *ngIf="!isUserTurn">
+        <div class="child js-first"></div>
+        <div class="child js-second"></div>
+        <div class="child js-third"></div>    
+      </div>
+
+
+
+      <div class="symbol bg-blue">N</div>
+      <div class="name">Nate</div>
+    </div>
+
+
+
+    
+    <div class="video-box">
+      <div class="mic" *ngIf="!isUserTurn">
+        <span class="fas fa-microphone-slash"></span>
+      </div>
+
+      <div class="parent" *ngIf="isUserTurn">
+        <div class="child js-first"></div>
+        <div class="child js-second"></div>
+        <div class="child js-third"></div>    
+      </div>
+
+
+      <div class="symbol bg-orange">{{getFirstLetterUpperCase()}}</div>
+      <div class="name">{{nameCandidate}}</div>
+    </div>
+  </div>
+  
+
+
+
+  <div class="footer bg-dark-gray">
+    <div class="meeting-name">{{ formattedId }} | {{formatTimer()}}</div>
+
+    <div class="controls meeting-controls">
+      <div  class="bg-green icon check"
+            [ngClass]="{'disabled': !isUserTurn}"
+            (click)="isUserTurn && stopRecording()">
+
+            <i class="fas fa-check"></i>
+      </div>
+      <div class="bg-red icon phone"><i class="fa-solid fa-phone"></i></div>
+    </div>
+
+    <div class="controls meeting-chat">
+      <div class="icon"><i class="fas fa-info"></i></div>
+    </div>
   </div>
 </div>
-
-
-<div *ngIf="isUserTurn; else systemTurn">
-  <p>Es tu turno para hablar. Por favor, responde la pregunta.</p>
-  <button (click)="stopRecording()">Detener grabación</button>
-</div>
-
-<ng-template #systemTurn>
-  <p>El sistema está hablando. Por favor, espera...</p>
-</ng-template>
