@@ -105,27 +105,40 @@ export class InterviewComponent implements OnInit {
       this.interviewData = data;
       this.nameCandidate = data.name;
       console.log(this.interviewData);
-      this.playQuestionAndRecord();
+      this.preloadAudios();
     }, error => {
       console.error('Error al cargar los datos de la entrevista', error);
+    });
+  }
+
+
+  preloadAudios() {
+    const questions = this.interviewData.questions.questions;
+    const audioPromises = questions.map((question: any) =>
+      this.data.generateAudio(question.question).toPromise()
+    );
+  
+    Promise.all(audioPromises).then(audioBlobs => {
+      audioBlobs.forEach((audioBlob, index) => {
+        const audioUrl = URL.createObjectURL(audioBlob);
+        questions[index].audioUrl = audioUrl;
+      });
+      this.playQuestionAndRecord(); // Iniciar la reproducción después de cargar todos los audios
+    }).catch(error => {
+      console.error('Error al generar los audios', error);
     });
   }
 
   playQuestionAndRecord() {
     this.isUserTurn = false;
     this.cdr.detectChanges(); // Forzar detección de cambios
-
-    const questionText = this.interviewData.questions.questions[this.currentQuestionIndex].question;
-    this.data.generateAudio(questionText).subscribe((audioBlob) => {
-      const audioUrl = URL.createObjectURL(audioBlob);
-      const audio = new Audio(audioUrl);
-      audio.play();
-      audio.onended = () => {
-        this.startRecording();
-      };
-    }, error => {
-      console.error('Error al generar el audio', error);
-    });
+  
+    const audioUrl = this.interviewData.questions.questions[this.currentQuestionIndex].audioUrl;
+    const audio = new Audio(audioUrl);
+    audio.play();
+    audio.onended = () => {
+      this.startRecording();
+    };
   }
 
   startRecording() {
