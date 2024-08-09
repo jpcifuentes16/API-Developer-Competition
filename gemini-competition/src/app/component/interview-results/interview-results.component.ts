@@ -26,9 +26,24 @@ export class InterviewResultsComponent implements OnInit {
     });
   }
 
+
+  removeDuplicatesWithNullPoints(interviews: any[]): any[] {
+    const uniqueInterviews = new Map<string, any>();
+  
+    interviews.forEach(interview => {
+      // Si ya existe una entrada para ese nombre y los puntos son null, la ignora.
+      if (!uniqueInterviews.has(interview.name) || interview.points !== null) {
+        uniqueInterviews.set(interview.name, interview);
+      }
+    });
+  
+    // Retorna un array con los valores únicos
+    return Array.from(uniqueInterviews.values());
+  }
+
   loadInterviewResults(): void {
     this.dataService.getInterviewResult(this.templateId).subscribe(result => {
-      this.interviews = result['interviews-generated'];
+      this.interviews = this.removeDuplicatesWithNullPoints(result['interviews-generated']);
     });
   }
 

@@ -76,7 +76,7 @@ export class InterviewComponent implements OnInit {
     else
     {
       console.log("Se termino");
-      this.data.completedInterview( localStorage.getItem("uid")!, "Zim7Hn9zG2L74y1fy5sF", this.interviewId).subscribe( (res) => {
+      this.data.completedInterview(this.interviewData.author, this.interviewData.templateId, this.interviewId).subscribe( (res) => {
         console.log(res);
         
       });
