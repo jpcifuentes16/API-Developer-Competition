@@ -1,7 +1,7 @@
 import { Component, OnInit, Renderer2, ElementRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DataService } from 'src/app/shared/data.service';
-import { ChangeDetectorRef } from '@angular/core'; // Importar ChangeDetectorRef
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-interview',
@@ -33,9 +33,12 @@ export class InterviewComponent implements OnInit {
     this.route.paramMap.subscribe(params => {
       this.interviewId = params.get('id')!;
       this.formattedId = this.formatId(this.interviewId);
-      this.loadInterviewData();
       this.startTimer();
       this.activateWaveAnimation();
+
+      // Iniciar la carga de los datos de la entrevista y la reproducción de las instrucciones simultáneamente
+      this.loadInterviewData();
+      this.playInstructionsAudio();
     });
   }
 
@@ -69,7 +72,6 @@ export class InterviewComponent implements OnInit {
     return '';
   }
 
-
   formatTimer(): string {
     const hours = Math.floor(this.timer / 3600);
     const minutes = Math.floor((this.timer % 3600) / 60);
@@ -100,6 +102,26 @@ export class InterviewComponent implements OnInit {
     setInterval(() => this.setHeight(), 200);
   }
 
+  playInstructionsAudio() {
+    const instructionsAudio = new Audio('assets/audios/intro_EN.mp3'); // Ruta al archivo de audio de instrucciones
+    instructionsAudio.play();
+
+    instructionsAudio.onended = () => {
+      // Verificar si los audios de las preguntas ya están listos
+      if (this.interviewData && this.interviewData.questions.questions[0].audioUrl) {
+        this.playQuestionAndRecord(); // Iniciar la reproducción de la primera pregunta
+      } else {
+        // Esperar a que los audios estén listos si aún no lo están
+        const checkInterval = setInterval(() => {
+          if (this.interviewData && this.interviewData.questions.questions[0].audioUrl) {
+            clearInterval(checkInterval);
+            this.playQuestionAndRecord();
+          }
+        }, 100);
+      }
+    };
+  }
+
   loadInterviewData() {
     this.data.getInterviewData(this.interviewId).subscribe(data => {
       this.interviewData = data;
@@ -110,7 +132,6 @@ export class InterviewComponent implements OnInit {
       console.error('Error al cargar los datos de la entrevista', error);
     });
   }
-
 
   preloadAudios() {
     const questions = this.interviewData.questions.questions;
@@ -123,7 +144,6 @@ export class InterviewComponent implements OnInit {
         const audioUrl = URL.createObjectURL(audioBlob);
         questions[index].audioUrl = audioUrl;
       });
-      this.playQuestionAndRecord(); // Iniciar la reproducción después de cargar todos los audios
     }).catch(error => {
       console.error('Error al generar los audios', error);
     });
