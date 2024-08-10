@@ -1,23 +1,25 @@
 <div class="container" *ngIf="interviewData">
-    <h2>Interview Details of: {{ interviewData.name }}</h2>
-    <div class="accordion" id="accordionExample">
-      <div *ngFor="let question of interviewData.questions.questions; let i = index" class="card">
-        <div class="card-header" id="heading{{i}}" (click)="toggleSection(i)">
-          <h2 class="mb-0">
-            <button class="btn" type="button" >
-              Section {{question.section}}
-            </button>
-          </h2>
-        </div>
-        <div [id]="'collapse'+i" [class.collapse]="!isSectionOpen(i)" [class.show]="isSectionOpen(i)">
-          <div class="card-body">
-            <p><strong>Question:</strong> {{ question.question }}</p>
-            <p><strong>Evaluation:</strong> {{ question.evaluation }}</p>
-            <p><strong>Answer:</strong> {{ question.answer }}</p>
-            <p><strong>Points:</strong> {{ question.points }}</p>
-          </div>
-        </div>
+  <h2>Interview Details of: {{ interviewData.name }}</h2>
+  <div class="accordion" id="accordionExample">
+    <div *ngFor="let section of groupedQuestions | keyvalue; let i = index" class="card">
+      <div class="card-header" id="heading{{i}}" (click)="toggleSection(i)">
+        <h2 class="mb-0">
+          <button class="btn" type="button" >
+            Section {{ section.key }}
+          </button>
+        </h2>
       </div>
+      <div [id]="'collapse'+i" [class.collapse]="!isSectionOpen(i)" [class.show]="isSectionOpen(i)">
+        <div class="card-body">
+            <div *ngFor="let question of section.value" class="question-item">
+                <p><strong>Question:</strong> {{ question.question }}</p>
+                <p><strong>Evaluation:</strong> {{ question.evaluation }}</p>
+                <p><strong>Answer:</strong> {{ question.answer }}</p>
+                <p><strong>Points:</strong> {{ question.points }}</p>
+                <hr class="my-3" />
+            </div>
+        </div>
+    </div>
     </div>
   </div>
-  
+</div>

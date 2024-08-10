@@ -13,7 +13,7 @@ export class AppComponent {
   constructor(private router: Router) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-        this.showToolbar = !event.url.includes('/interview/');
+        this.showToolbar = !event.url.includes('/interview/') && !event.url.includes('/login');
       }
     });
   }
