@@ -1,12 +1,12 @@
 <div class="container mt-4">
-    <h2 class="mb-4">Resultados de la Entrevista para {{ name }}</h2>
+    <h2 class="mb-4">{{ name }} Interview Results</h2>
     <div class="table-responsive">
       <table class="table table-striped">
         <thead class="thead-dark">
           <tr>
-            <th>Nombre</th>
-            <th>Punteo</th>
-            <th>Acciones</th>
+            <th>Name</th>
+            <th>Points</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -14,7 +14,7 @@
             <td>{{ interview.name }}</td>
             <td>{{ interview.points !== null ? interview.points : '-' }}</td>
             <td>
-              <button class="btn btn-primary btn-sm" (click)="viewDetails(interview.id)">Ver Detalles</button>
+              <button class="btn btn-primary btn-sm" (click)="viewDetails(interview.id)">View Details</button>
             </td>
           </tr>
         </tbody>

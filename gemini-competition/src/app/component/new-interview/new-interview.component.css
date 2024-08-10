@@ -8,8 +8,17 @@
   font-weight: bold;
 }
 
+.container{
+  padding-top: 5%;
+}
+
 .btn {
   margin-right: 0.5rem;
+  background-color: #1A6DDE;
+}
+
+.btn-success{
+  background-color: #00832D;
 }
 
 .mt-5 {

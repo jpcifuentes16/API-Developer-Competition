@@ -11,7 +11,7 @@ import { DataService } from 'src/app/shared/data.service';
 export class NewTemplateComponent {
   formData = {
     templateName: '',
-    interviewLanguage: 'Español',
+    interviewLanguage: 'Ingles',
     sections: [
       {
         questionCount: 1,

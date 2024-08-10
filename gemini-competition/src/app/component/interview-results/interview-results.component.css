@@ -5,7 +5,16 @@
   }
   
   h2 {
-    font-weight: bold;
     color: #343a40;
   }
-  
+
+  .container
+  {
+    padding-top: 6%;
+  }
+
+  .btn{
+    background-color: #1A6DDE;
+  }
+
+

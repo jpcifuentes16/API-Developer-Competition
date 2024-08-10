@@ -1,10 +1,15 @@
 /* interview-template.component.css */
 .container {
   max-width: 800px;
+  padding-top: 5%;
 }
 
 .card-header {
   background: #007bff;
+}
+
+.btn-success{
+  background-color: #00832D;
 }
 
 .card-body {

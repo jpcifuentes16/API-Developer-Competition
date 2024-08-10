@@ -1,18 +1,18 @@
-<div *ngIf="interviewData">
-    <h2>Interview Details: {{ interviewData.name }}</h2>
+<div class="container" *ngIf="interviewData">
+    <h2>Interview Details of: {{ interviewData.name }}</h2>
     <div class="accordion" id="accordionExample">
       <div *ngFor="let question of interviewData.questions.questions; let i = index" class="card">
-        <div class="card-header" id="heading{{i}}">
+        <div class="card-header" id="heading{{i}}" (click)="toggleSection(i)">
           <h2 class="mb-0">
-            <button class="btn btn-link" type="button" (click)="toggleSection(i)">
+            <button class="btn" type="button" >
               Section {{question.section}}
             </button>
           </h2>
         </div>
         <div [id]="'collapse'+i" [class.collapse]="!isSectionOpen(i)" [class.show]="isSectionOpen(i)">
           <div class="card-body">
-            <p><strong>Evaluation:</strong> {{ question.evaluation }}</p>
             <p><strong>Question:</strong> {{ question.question }}</p>
+            <p><strong>Evaluation:</strong> {{ question.evaluation }}</p>
             <p><strong>Answer:</strong> {{ question.answer }}</p>
             <p><strong>Points:</strong> {{ question.points }}</p>
           </div>

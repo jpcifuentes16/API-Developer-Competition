@@ -15,8 +15,8 @@
         <div class="form-group">
           <label for="interviewLanguage" class="font-weight-bold">Interview Language</label>
           <select class="form-control" id="interviewLanguage" [(ngModel)]="formData.interviewLanguage" name="interviewLanguage" required>
-            <option value="Español">Spanish</option>
             <option value="Ingles">English</option>
+            <option value="Español">Spanish</option>
           </select>
           <div *ngIf="form.submitted && form.controls.interviewLanguage?.invalid" class="text-danger">
             Interview language is required.
