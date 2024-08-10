@@ -1,6 +1,7 @@
 .custom-toolbar {
     background-color: #C2DAFF;
     color: #1A1A1A;
+    z-index: 1030;
     position: fixed;
     top: 20px;
     left: 50%;
