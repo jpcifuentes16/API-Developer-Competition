@@ -38,7 +38,7 @@ const createAudioFileFromText = async (text) => {
   return new Promise(async (resolve, reject) => {
     try {
       const audioStream = await client.generate({
-        voice: "George",
+        voice: "Brian",
         model_id: "eleven_multilingual_v2",
         text,
       });

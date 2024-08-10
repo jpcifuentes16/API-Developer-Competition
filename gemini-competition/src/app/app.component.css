@@ -1,0 +1,66 @@
+.custom-toolbar {
+    background-color: #C2DAFF;
+    color: #1A1A1A;
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    border-radius: 50px;
+    padding: 10px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+}
+
+.center-buttons {
+    display: flex;
+    gap: 25px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Espacio entre icono y nombre */
+}
+
+.app-icon {
+    font-size: 28px;
+    color: #1A1A1A; /* Color del icono */
+}
+
+.app-name {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1A1A1A;
+    text-transform: uppercase; /* Texto en mayúsculas */
+    letter-spacing: 1.2px; /* Espaciado entre letras */
+}
+
+.spacer {
+    flex: 1 1 auto;
+}
+
+button.mat-button {
+    color: #1A1A1A;
+    text-transform: none;
+    font-weight: 500;
+    border-radius: 25px;
+    padding: 10px 15px;
+    background-color: #C2DAFF;
+    transition: background-color 0.3s ease;
+}
+
+button.mat-button:hover {
+    background-color: rgba(0, 0, 0, 0.08);
+}
+
+button.mat-button.active-button {
+    text-decoration: underline;
+}
+
+.mat-icon {
+    font-size: 20px;
+}

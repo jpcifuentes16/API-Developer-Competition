@@ -27,6 +27,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { FarewellComponent } from './component/farewell/farewell.component';
 
 
+
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatListModule } from '@angular/material/list';
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -50,7 +56,10 @@ import { FarewellComponent } from './component/farewell/farewell.component';
     AngularFireModule.initializeApp(environment.firebase),
     FormsModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    MatToolbarModule,
+    MatMenuModule,
+    MatListModule,
   ],  
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true },
