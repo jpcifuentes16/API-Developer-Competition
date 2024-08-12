@@ -1,0 +1,16 @@
+
+
+const admin = require('firebase-admin');
+
+const firebaseConfig = {
+    apiKey: "",
+    authDomain: "",
+    projectId: "",
+    storageBucket: "",
+    messagingSenderId: "",
+    appId: ""
+};
+
+admin.initializeApp(firebaseConfig);
+
+module.exports = admin;
