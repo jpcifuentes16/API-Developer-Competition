@@ -110,3 +110,12 @@ To run the server, ensure you are in the `API` directory:
    ```bash
    node index.js
    ```
+## TODO
+
+- **Implement Interview Functionality in Spanish:**
+  - Develop and integrate support for conducting interviews in the Spanish language.
+
+- **Video Analysis for Webcam-Enabled Interviews:**
+  - Implement video analysis features for conducting interviews with the webcam activated.
+
+
